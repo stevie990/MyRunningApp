@@ -2,6 +2,7 @@
     <string name="app_name">MyRunningApp</string>
     <string name="google_maps_key">AIzaSyDW5qkjTEKPNt3CJYL1DjGOehhVwADK2hw</string>
     <string name="my_running_app">My Running App</string>
+    <string name="sort_by">Sort by:</string>
 
     <string-array name="filter_options">
         <item>Date</item>
