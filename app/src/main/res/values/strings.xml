@@ -11,4 +11,7 @@
         <item>Average Speed</item>
         <item>Calories Burned</item>
     </string-array>
+
+    <string name="notification_title">My Running App</string>
+    <string name="notification_initial_time">00:00:00</string>
 </resources>
