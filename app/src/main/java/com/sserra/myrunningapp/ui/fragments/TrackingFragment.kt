@@ -15,6 +15,7 @@ import com.sserra.myrunningapp.other.Constants.ACTION_START_OR_RESUME_SERVICE
 import com.sserra.myrunningapp.other.Constants.MAP_ZOOM
 import com.sserra.myrunningapp.other.Constants.POLYLINE_COLOR
 import com.sserra.myrunningapp.other.Constants.POLYLINE_WIDTH
+import com.sserra.myrunningapp.other.TrackingUtility
 import com.sserra.myrunningapp.services.Polyline
 import com.sserra.myrunningapp.services.TrackingService
 import com.sserra.myrunningapp.ui.viewmodels.MainViewModel
@@ -30,6 +31,8 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
     private var pathPoints = mutableListOf<Polyline>()
 
     private var map: GoogleMap? = null
+
+    private var currentTimeInMillis = 0L
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -152,6 +155,12 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             pathPoints = it
             addLatestPolyline()
             moveCameraToUser()
+        })
+
+        TrackingService.timeRunInMilliseconds.observe(viewLifecycleOwner, Observer {
+            currentTimeInMillis = it
+            val formattedTime = TrackingUtility.getFormattedStopWatchTime(currentTimeInMillis, true)
+            tvTimer.text = formattedTime
         })
     }
 }
