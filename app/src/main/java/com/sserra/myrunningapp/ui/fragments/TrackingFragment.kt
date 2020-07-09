@@ -42,8 +42,9 @@ class TrackingFragment : Fragment(R.layout.fragment_tracking) {
             toggleRun()
         }
 
-        mapView.getMapAsync {
-            map = it
+        mapView.getMapAsync { googleMap ->
+            map = googleMap
+            map?.let { it.mapType = GoogleMap.MAP_TYPE_SATELLITE }
             addAllPolylines()
         }
 
