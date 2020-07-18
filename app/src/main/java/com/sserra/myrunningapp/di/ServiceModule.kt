@@ -36,7 +36,6 @@ object ServiceModule {
             PendingIntent.FLAG_UPDATE_CURRENT
         )
 
-
     @ServiceScoped
     @Provides
     fun provideBaseNotificationBuilder(
@@ -46,7 +45,7 @@ object ServiceModule {
             .setAutoCancel(false)
             .setOngoing(true)
             .setSmallIcon(R.drawable.ic_run)
-            .setContentTitle("00:00:00")
-            .setContentText("My Running App")
+            .setContentTitle("My Running App")
+            .setContentText("00:00:00")
             .setContentIntent(pendingIntent)
 }
