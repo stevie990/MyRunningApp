@@ -4,16 +4,16 @@ import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import com.google.android.material.snackbar.Snackbar
 import com.sserra.myrunningapp.R
 import com.sserra.myrunningapp.other.Constants
+import com.sserra.myrunningapp.other.Constants.KEY_NAME
+import com.sserra.myrunningapp.other.Constants.KEY_WEIGHT
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_settings.*
-import kotlinx.android.synthetic.main.fragment_setup.*
-import kotlinx.android.synthetic.main.fragment_setup.etName
-import kotlinx.android.synthetic.main.fragment_setup.etWeight
+import kotlinx.android.synthetic.main.fragment_settings.etName
+import kotlinx.android.synthetic.main.fragment_settings.etWeight
 import javax.inject.Inject
 
 @AndroidEntryPoint
@@ -31,11 +31,13 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+//        loadFieldsFromSharedPref()
+
         etName.setText(name)
         etWeight.setText(weight.toString())
 
         btnApplyChanges.setOnClickListener {
-            val success = writePersonalDataToSharedPref()
+            val success = applyChangesToSharedPref()
             if (success) {
                 Snackbar.make(requireView(), "Settings Successfully Updated", Snackbar.LENGTH_LONG).show()
             } else {
@@ -44,20 +46,27 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-    private fun writePersonalDataToSharedPref(): Boolean {
-        val name = etName.text.toString()
-        val weight = etWeight.text.toString()
-        if (name.isEmpty() || weight.isEmpty()){
+//    private fun loadFieldsFromSharedPref() {
+//        val name = sharedPreferences.getString(KEY_NAME, "")
+//        val weight = sharedPreferences.getFloat(KEY_WEIGHT, 73f)
+//        etName.setText(name)
+//        etWeight.setText(weight.toString())
+//    }
+
+    private fun applyChangesToSharedPref() : Boolean {
+        val nameText = etName.text.toString()
+        val weightText = etWeight.text.toString()
+
+        if (nameText.isEmpty() || weightText.isEmpty()) {
             return false
         }
 
         sharedPreferences.edit()
-            .putString(Constants.KEY_NAME, name)
-            .putFloat(Constants.KEY_WEIGHT, weight.toFloat())
-            .putBoolean(Constants.KEY_FIRST_TIME_TOGGLE, false)
+            .putString(KEY_NAME, nameText)
+            .putFloat(KEY_WEIGHT, weightText.toFloat())
             .apply()
 
-        val toolbarText = "Let's go, $name!"
+        val toolbarText = "Let's go $nameText"
         requireActivity().tvToolbarTitle.text = toolbarText
         return true
     }
