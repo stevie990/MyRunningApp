@@ -15,6 +15,7 @@ import kotlinx.android.synthetic.main.fragment_settings.*
 import kotlinx.android.synthetic.main.fragment_settings.etName
 import kotlinx.android.synthetic.main.fragment_settings.etWeight
 import javax.inject.Inject
+import javax.inject.Named
 
 @AndroidEntryPoint
 class SettingsFragment : Fragment(R.layout.fragment_settings) {
@@ -22,19 +23,10 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
     @Inject
     lateinit var sharedPreferences: SharedPreferences
 
-    @set:Inject
-    var name = ""
-
-    @set:Inject
-    var weight = 73f
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-//        loadFieldsFromSharedPref()
-
-        etName.setText(name)
-        etWeight.setText(weight.toString())
+        loadFieldsFromSharedPref()
 
         btnApplyChanges.setOnClickListener {
             val success = applyChangesToSharedPref()
@@ -46,12 +38,12 @@ class SettingsFragment : Fragment(R.layout.fragment_settings) {
         }
     }
 
-//    private fun loadFieldsFromSharedPref() {
-//        val name = sharedPreferences.getString(KEY_NAME, "")
-//        val weight = sharedPreferences.getFloat(KEY_WEIGHT, 73f)
-//        etName.setText(name)
-//        etWeight.setText(weight.toString())
-//    }
+    private fun loadFieldsFromSharedPref() {
+        val name = sharedPreferences.getString(KEY_NAME, "")
+        val weight = sharedPreferences.getFloat(KEY_WEIGHT, 73f)
+        etName.setText(name)
+        etWeight.setText(weight.toString())
+    }
 
     private fun applyChangesToSharedPref() : Boolean {
         val nameText = etName.text.toString()

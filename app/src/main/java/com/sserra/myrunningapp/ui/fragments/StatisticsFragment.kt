@@ -1,11 +1,19 @@
 package com.sserra.myrunningapp.ui.fragments
 
+import android.content.Context
+import android.graphics.Color
 import android.os.Bundle
 import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
+import com.github.mikephil.charting.components.XAxis
+import com.github.mikephil.charting.data.BarData
+import com.github.mikephil.charting.data.BarDataSet
+import com.github.mikephil.charting.data.BarEntry
 import com.sserra.myrunningapp.R
+import com.sserra.myrunningapp.other.CustomMarkerView
 import com.sserra.myrunningapp.other.TrackingUtility
 import com.sserra.myrunningapp.ui.viewmodels.StatisticsViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -20,6 +28,34 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         subscribeToObservers()
+        setupBarChart()
+    }
+
+    private fun setupBarChart() {
+        barChart.xAxis.apply {
+            position = XAxis.XAxisPosition.BOTTOM
+            setDrawLabels(false)
+            axisLineColor = Color.WHITE
+            textColor = Color.WHITE
+            setDrawGridLines(false)
+        }
+
+        barChart.axisLeft.apply {
+            axisLineColor = Color.WHITE
+            textColor = Color.WHITE
+            setDrawGridLines(false)
+        }
+
+        barChart.axisRight.apply {
+            axisLineColor = Color.WHITE
+            textColor = Color.WHITE
+            setDrawGridLines(false)
+        }
+
+        barChart.apply {
+            description.text = "Avg Speed Over Time"
+            legend.isEnabled = false
+        }
     }
 
     private fun subscribeToObservers() {
@@ -51,6 +87,20 @@ class StatisticsFragment : Fragment(R.layout.fragment_statistics) {
             it?.let {
                 val totalCalories = "${it}kcal"
                 tvTotalCalories.text = totalCalories
+            }
+        })
+
+        viewModel.runsSortedByDate.observe(viewLifecycleOwner, Observer {
+            it?.let {
+                val allAvgSpeeds = it.indices.map { i -> BarEntry(i.toFloat(), it[i].avgSpeedKMH) }
+                val barDataSet = BarDataSet(allAvgSpeeds, "Avg speed over time").apply {
+                    valueTextColor = Color.WHITE
+                    color = ContextCompat.getColor(requireContext(), R.color.colorAccent)
+                }
+
+                barChart.data = BarData(barDataSet)
+                barChart.marker = CustomMarkerView(it.reversed(), requireContext(), R.layout.marker_view)
+                barChart.invalidate()
             }
         })
     }
